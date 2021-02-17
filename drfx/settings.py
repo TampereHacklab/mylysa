@@ -307,6 +307,17 @@ SMS = {
 }
 
 
+OAUTH2_PROVIDER = {
+    "OAUTH2_VALIDATOR_CLASS": "api.mulysaoauthvalidator.MulysaOAuth2Validator",
+    "OIDC_ENABLED": True,
+    "SCOPES": {
+        "openid": "OpenID Connect scope",
+    },
+}
+
+
+
+
 # Import just to get in the translation context
 # from utils import businesslogic
 
