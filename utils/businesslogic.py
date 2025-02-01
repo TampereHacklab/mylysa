@@ -294,9 +294,11 @@ class BusinessLogic:
                 subscription = ServiceSubscription.objects.get(
                     user=invoice.user, id=invoice.subscription.id
                 )
-                BusinessLogic._service_paid_by_transaction(subscription, transaction, invoice.days)
+                BusinessLogic._service_paid_by_transaction(
+                    subscription, transaction, invoice.days
+                )
                 invoice.payment_transaction = transaction
-                invoice.save()       
+                invoice.save()
             else:
                 transaction.comment = f"Insufficient amount for invoice {invoice}"
                 transaction.save()
@@ -344,7 +346,9 @@ class BusinessLogic:
                 logger.debug(
                     f"Transaction is new and pays for service {subscription.service}"
                 )
-                BusinessLogic._service_paid_by_transaction(subscription, transaction, subscription.service.days_per_payment)
+                BusinessLogic._service_paid_by_transaction(
+                    subscription, transaction, subscription.service.days_per_payment
+                )
             else:
                 transaction.user = subscription.user
                 transaction.comment = (
@@ -384,9 +388,7 @@ class BusinessLogic:
         logger.debug(f"Paying {servicesubscription} and gained {add_days} days more")
 
         # How many days to add to subscription's paid until
-        days_to_add = timedelta(
-            days = add_days
-        )
+        days_to_add = timedelta(days=add_days)
         # First payment - initialize with payment date and add first time bonus days
         if not servicesubscription.paid_until:
             bonus_days = timedelta(
@@ -396,10 +398,13 @@ class BusinessLogic:
                 f"{servicesubscription} paid for first time, adding bonus of {bonus_days}"
             )
             if transaction.comment:
-                transaction.comment = transaction.comment + f"\r\nFirst payment of {servicesubscription} - added {bonus_days.days} bonus days."
+                transaction.comment = (
+                    transaction.comment
+                    + f"\r\nFirst payment of {servicesubscription} - added {bonus_days.days} bonus days."
+                )
             else:
                 transaction.comment = f"First payment of {servicesubscription} - added {bonus_days.days} bonus days."
-            
+
             days_to_add = days_to_add + bonus_days
             servicesubscription.paid_until = transaction.date
 
@@ -443,7 +448,9 @@ class BusinessLogic:
                     # check if and howmuch forehand child servce is paid
                     if paid_servicesubscription.paid_until:
                         if paid_servicesubscription.paid_until > transaction.date:
-                            child_date = paid_servicesubscription.paid_until - transaction.date
+                            child_date = (
+                                paid_servicesubscription.paid_until - transaction.date
+                            )
                             child_days = child_date.days
 
                     extra_days = (
